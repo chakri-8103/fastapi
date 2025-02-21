@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FastAPI Items Management</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; text-align: center; }
+        button { margin: 10px; padding: 10px 15px; font-size: 16px; cursor: pointer; }
+        .container { display: none; margin-top: 20px; padding: 10px; border: 1px solid #ddd; border-radius: 5px; }
+        input { display: block; margin: 5px auto; padding: 8px; width: 80%; }
+    </style>
+    <script>
+        const BASE_URL = "https://be3c-210-212-210-98.ngrok-free.app";
+    
+        function toggleContainer(id) {
+            document.querySelectorAll('.container').forEach(container => container.style.display = 'none');
+            document.getElementById(id).style.display = 'block';
+        }
+    
+        async function fetchItems() {
+            const response = await fetch(`${BASE_URL}/items/`);
+            const items = await response.json();
+            console.log("All Items: " + JSON.stringify(items, null, 2));
+        }
+    
+        async function addItem() {
+            const item = {
+                name: document.getElementById("name").value,
+                description: document.getElementById("description").value,
+                price: parseFloat(document.getElementById("price").value),
+                quantity: parseInt(document.getElementById("quantity").value)
+            };
+    
+            const response = await fetch(`${BASE_URL}/items/`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(item)
+            });
+    
+            const result = await response.json();
+            console.log(result.message);
+        }
+    
+        async function updateItem() {
+            const itemId = document.getElementById("update-id").value;
+            const updatedData = {
+                name: document.getElementById("update-name").value,
+                description: document.getElementById("update-description").value,
+                price: parseFloat(document.getElementById("update-price").value),
+                quantity: parseInt(document.getElementById("update-quantity").value)
+            };
+    
+            const response = await fetch(`${BASE_URL}/items/${itemId}`, {
+                method: "PUT",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(updatedData)
+            });
+    
+            const result = await response.json();
+            console.log(result.message);
+        }
+    
+        async function deleteItem() {
+            const itemId = document.getElementById("delete-id").value;
+    
+            const response = await fetch(`${BASE_URL}/items/${itemId}`, {
+                method: "DELETE"
+            });
+            const result = await response.json();
+            console.log(result.message);
+        }
+    
+        async function searchItems() {
+            const query = document.getElementById("search-name").value;
+            const response = await fetch(`${BASE_URL}/items/search/?name=${query}`);
+            const items = await response.json();
+            console.log("Search Results: " + JSON.stringify(items, null, 2));
+        }
+    </script>
+</head>
+<body>
+
+    <h1>FastAPI Items Management</h1>
+
+    <button onclick="fetchItems()">Fetch All Items</button>
+    <button onclick="toggleContainer('add-container')">Add Item</button>
+    <button onclick="toggleContainer('update-container')">Update Item</button>
+    <button onclick="toggleContainer('delete-container')">Delete Item</button>
+    <button onclick="toggleContainer('search-container')">Search Items</button>
+
+    <div id="add-container" class="container">
+        <h2>Add Item</h2>
+        <input type="text" id="name" placeholder="Name">
+        <input type="text" id="description" placeholder="Description">
+        <input type="number" id="price" placeholder="Price">
+        <input type="number" id="quantity" placeholder="Quantity">
+        <button onclick="addItem()">Submit</button>
+    </div>
+
+    <div id="update-container" class="container">
+        <h2>Update Item</h2>
+        <input type="text" id="update-id" placeholder="Item ID">
+        <input type="text" id="update-name" placeholder="New Name">
+        <input type="text" id="update-description" placeholder="New Description">
+        <input type="number" id="update-price" placeholder="New Price">
+        <input type="number" id="update-quantity" placeholder="New Quantity">
+        <button onclick="updateItem()">Submit</button>
+    </div>
+
+    <div id="delete-container" class="container">
+        <h2>Delete Item</h2>
+        <input type="text" id="delete-id" placeholder="Item ID">
+        <button onclick="deleteItem()">Submit</button>
+    </div>
+
+    <div id="search-container" class="container">
+        <h2>Search Items</h2>
+        <input type="text" id="search-name" placeholder="Search by Name">
+        <button onclick="searchItems()">Submit</button>
+    </div>
+
+</body>
+</html>

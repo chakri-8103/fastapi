@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FastAPI Items Management</title>
+    <title>FastAPI Student Data Management</title>
     <style>
         body { font-family: Arial, sans-serif; margin: 20px; text-align: center; }
         button { margin: 10px; padding: 10px 15px; font-size: 16px; cursor: pointer; }
@@ -11,78 +11,90 @@
         input { display: block; margin: 5px auto; padding: 8px; width: 80%; }
     </style>
     <script>
-        const BASE_URL = "https://9562-103-140-19-66.ngrok-free.app";
+        const BASE_URL = "https://2e65-103-140-19-66.ngrok-free.app";
 
         function toggleContainer(id) {
             document.querySelectorAll('.container').forEach(container => container.style.display = 'none');
             document.getElementById(id).style.display = 'block';
         }
 
+        function validateInputs(inputs) {
+            return inputs.every(input => input.value.trim() !== "");
+        }
+
         async function addItem() {
             const nameInput = document.getElementById("name");
-            const descriptionInput = document.getElementById("description");
-            const priceInput = document.getElementById("price");
-            const quantityInput = document.getElementById("quantity");
+            const tenthInput = document.getElementById("tenth");
+            const twelfthInput = document.getElementById("twelfth");
+            const gradInput = document.getElementById("grad");
 
-            const item = {
+            if (!validateInputs([nameInput, tenthInput, twelfthInput, gradInput])) {
+                alert("Please fill in all fields.");
+                return;
+            }
+
+            const studentData = {
                 name: nameInput.value,
-                description: descriptionInput.value,
-                price: parseFloat(priceInput.value),
-                quantity: parseInt(quantityInput.value)
+                tenth: parseFloat(tenthInput.value) || 0,
+                twelfth: parseFloat(twelfthInput.value) || 0,
+                graduation: parseFloat(gradInput.value) || 0
             };
 
-            const response = await fetch(`${BASE_URL}/items/`, {
+            const response = await fetch(`${BASE_URL}/students/`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(item)
+                body: JSON.stringify(studentData)
             });
 
             if (response.ok) {
                 const data = await response.json();
-                alert(`Data added successfully! \nItem ID: ${data.id}`);
-                console.log(data.id);
+                alert(`Student data added successfully! \nStudent ID: ${data.id}`);
 
-                // Clear input fields
+                // Clear inputs
                 nameInput.value = "";
-                descriptionInput.value = "";
-                priceInput.value = "";
-                quantityInput.value = "";
+                tenthInput.value = "";
+                twelfthInput.value = "";
+                gradInput.value = "";
             } else {
-                alert("Failed to add data.");
+                alert("Failed to add student data.");
             }
         }
 
         async function updateItem() {
             const idInput = document.getElementById("update-id");
             const nameInput = document.getElementById("update-name");
-            const descriptionInput = document.getElementById("update-description");
-            const priceInput = document.getElementById("update-price");
-            const quantityInput = document.getElementById("update-quantity");
+            const tenthInput = document.getElementById("update-tenth");
+            const twelfthInput = document.getElementById("update-twelfth");
+            const gradInput = document.getElementById("update-grad");
 
-            const itemId = idInput.value;
+            if (!validateInputs([idInput, nameInput, tenthInput, twelfthInput, gradInput])) {
+                alert("Please fill in all fields.");
+                return;
+            }
+
+            const studentId = idInput.value;
             const updatedData = {
                 name: nameInput.value,
-                description: descriptionInput.value,
-                price: parseFloat(priceInput.value),
-                quantity: parseInt(quantityInput.value)
+                tenth: parseFloat(tenthInput.value) || 0,
+                twelfth: parseFloat(twelfthInput.value) || 0,
+                graduation: parseFloat(gradInput.value) || 0
             };
 
-            const response = await fetch(`${BASE_URL}/items/${itemId}`, {
+            const response = await fetch(`${BASE_URL}/students/${studentId}`, {
                 method: "PUT",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(updatedData)
             });
 
             if (response.ok) {
-                alert("Data updated successfully!");
-
+                alert("Student data updated successfully!");
 
                 // Clear input fields
                 idInput.value = "";
                 nameInput.value = "";
-                descriptionInput.value = "";
-                priceInput.value = "";
-                quantityInput.value = "";
+                tenthInput.value = "";
+                twelfthInput.value = "";
+                gradInput.value = "";
             } else {
                 alert("Data not found or update failed.");
             }
@@ -90,22 +102,20 @@
 
         async function deleteItem() {
             const idInput = document.getElementById("delete-id");
-            const itemId = idInput.value;
+            const studentId = idInput.value;
 
-            if (!itemId) {
+            if (!studentId) {
                 alert("Please enter a valid ID!");
                 return;
             }
 
             try {
-                const response = await fetch(`${BASE_URL}/items/${itemId}`, {
+                const response = await fetch(`${BASE_URL}/students/${studentId}`, {
                     method: "DELETE"
                 });
 
                 if (response.ok) {
-                    alert("Data deleted successfully!");
-
-                    // Clear input field
+                    alert("Student data deleted successfully!");
                     idInput.value = "";
                 } else {
                     alert("Data not found!");
@@ -118,7 +128,7 @@
 </head>
 <body>
 
-    <h1>FastAPI Items Management</h1>
+    <h1>FastAPI Student Data Management</h1>
 
     <button onclick="toggleContainer('add-container')">Add</button>
     <button onclick="toggleContainer('update-container')">Update</button>
@@ -127,25 +137,25 @@
     <div id="add-container" class="container">
         <h2>Add Student Data</h2>
         <input type="text" id="name" placeholder="Student Name">
-        <input type="text" id="description" placeholder="Enter Percentage of 10th class">
-        <input type="number" id="price" placeholder="Enter Percentage of 12th class">
-        <input type="number" id="quantity" placeholder="Enter Percentage of Graduation">
+        <input type="number" id="tenth" placeholder="Enter Percentage of 10th class">
+        <input type="number" id="twelfth" placeholder="Enter Percentage of 12th class">
+        <input type="number" id="grad" placeholder="Enter Percentage of Graduation">
         <button onclick="addItem()">Submit</button>
     </div>
 
     <div id="update-container" class="container">
         <h2>Update Student Data</h2>
-        <input type="text" id="update-id" placeholder="Item ID">
+        <input type="text" id="update-id" placeholder="Student ID">
         <input type="text" id="update-name" placeholder="Student Name">
-        <input type="text" id="update-description" placeholder="Enter Percentage of 10th class">
-        <input type="number" id="update-price" placeholder="Enter Percentage of 12th class">
-        <input type="number" id="update-quantity" placeholder="Enter Percentage of Graduation">
+        <input type="number" id="update-tenth" placeholder="Enter Percentage of 10th class">
+        <input type="number" id="update-twelfth" placeholder="Enter Percentage of 12th class">
+        <input type="number" id="update-grad" placeholder="Enter Percentage of Graduation">
         <button onclick="updateItem()">Submit</button>
     </div>
 
     <div id="delete-container" class="container">
-        <h2>Delete Data</h2>
-        <input type="text" id="delete-id" placeholder="Item ID">
+        <h2>Delete Student Data</h2>
+        <input type="text" id="delete-id" placeholder="Student ID">
         <button onclick="deleteItem()">Submit</button>
     </div>
 

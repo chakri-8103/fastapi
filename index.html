@@ -40,6 +40,7 @@
             if (response.ok) {
                 const data = await response.json();
                 alert(`Data added successfully! \nItem ID: ${data.id}`);
+                console.log(data.id);
 
                 // Clear input fields
                 nameInput.value = "";
@@ -74,7 +75,7 @@
 
             if (response.ok) {
                 alert("Data updated successfully!");
-                
+
 
                 // Clear input fields
                 idInput.value = "";

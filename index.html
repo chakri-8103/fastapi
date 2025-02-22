@@ -11,7 +11,7 @@
         input { display: block; margin: 5px auto; padding: 8px; width: 80%; }
     </style>
     <script>
-        const BASE_URL = "https://b16d-210-212-210-98.ngrok-free.app";
+        const BASE_URL = "https://9562-103-140-19-66.ngrok-free.app";
 
         function toggleContainer(id) {
             document.querySelectorAll('.container').forEach(container => container.style.display = 'none');
@@ -120,31 +120,31 @@
 
     <h1>FastAPI Items Management</h1>
 
-    <button onclick="toggleContainer('add-container')">Add Item</button>
-    <button onclick="toggleContainer('update-container')">Update Item</button>
-    <button onclick="toggleContainer('delete-container')">Delete Item</button>
+    <button onclick="toggleContainer('add-container')">Add</button>
+    <button onclick="toggleContainer('update-container')">Update</button>
+    <button onclick="toggleContainer('delete-container')">Delete</button>
 
     <div id="add-container" class="container">
-        <h2>Add Item</h2>
-        <input type="text" id="name" placeholder="Name">
-        <input type="text" id="description" placeholder="Description">
-        <input type="number" id="price" placeholder="Price">
-        <input type="number" id="quantity" placeholder="Quantity">
+        <h2>Add Student Data</h2>
+        <input type="text" id="name" placeholder="Student Name">
+        <input type="text" id="description" placeholder="Enter Percentage of 10th class">
+        <input type="number" id="price" placeholder="Enter Percentage of 12th class">
+        <input type="number" id="quantity" placeholder="Enter Percentage of Graduation">
         <button onclick="addItem()">Submit</button>
     </div>
 
     <div id="update-container" class="container">
-        <h2>Update Item</h2>
+        <h2>Update Student Data</h2>
         <input type="text" id="update-id" placeholder="Item ID">
-        <input type="text" id="update-name" placeholder="New Name">
-        <input type="text" id="update-description" placeholder="New Description">
-        <input type="number" id="update-price" placeholder="New Price">
-        <input type="number" id="update-quantity" placeholder="New Quantity">
+        <input type="text" id="update-name" placeholder="Student Name">
+        <input type="text" id="update-description" placeholder="Enter Percentage of 10th class">
+        <input type="number" id="update-price" placeholder="Enter Percentage of 12th class">
+        <input type="number" id="update-quantity" placeholder="Enter Percentage of Graduation">
         <button onclick="updateItem()">Submit</button>
     </div>
 
     <div id="delete-container" class="container">
-        <h2>Delete Item</h2>
+        <h2>Delete Data</h2>
         <input type="text" id="delete-id" placeholder="Item ID">
         <button onclick="deleteItem()">Submit</button>
     </div>

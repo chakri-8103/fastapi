@@ -38,7 +38,8 @@
             });
 
             if (response.ok) {
-                alert("Data added successfully!");
+                const data = await response.json();
+                alert(`Data added successfully! \nItem ID: ${data.id}`);
 
                 // Clear input fields
                 nameInput.value = "";

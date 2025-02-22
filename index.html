@@ -12,65 +12,104 @@
     </style>
     <script>
         const BASE_URL = "https://b16d-210-212-210-98.ngrok-free.app";
-    
+
         function toggleContainer(id) {
             document.querySelectorAll('.container').forEach(container => container.style.display = 'none');
             document.getElementById(id).style.display = 'block';
         }
-    
-        async function fetchItems() {
-            const response = await fetch(`${BASE_URL}/items/`);
-            const items = await response.json();
-        }
-    
+
         async function addItem() {
+            const nameInput = document.getElementById("name");
+            const descriptionInput = document.getElementById("description");
+            const priceInput = document.getElementById("price");
+            const quantityInput = document.getElementById("quantity");
+
             const item = {
-                name: document.getElementById("name").value,
-                description: document.getElementById("description").value,
-                price: parseFloat(document.getElementById("price").value),
-                quantity: parseInt(document.getElementById("quantity").value)
+                name: nameInput.value,
+                description: descriptionInput.value,
+                price: parseFloat(priceInput.value),
+                quantity: parseInt(quantityInput.value)
             };
-    
+
             const response = await fetch(`${BASE_URL}/items/`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(item)
             });
-    
-            const result = await response.json();
+
+            if (response.ok) {
+                alert("Data added successfully!");
+
+                // Clear input fields
+                nameInput.value = "";
+                descriptionInput.value = "";
+                priceInput.value = "";
+                quantityInput.value = "";
+            } else {
+                alert("Failed to add data.");
+            }
         }
-    
+
         async function updateItem() {
-            const itemId = document.getElementById("update-id").value;
+            const idInput = document.getElementById("update-id");
+            const nameInput = document.getElementById("update-name");
+            const descriptionInput = document.getElementById("update-description");
+            const priceInput = document.getElementById("update-price");
+            const quantityInput = document.getElementById("update-quantity");
+
+            const itemId = idInput.value;
             const updatedData = {
-                name: document.getElementById("update-name").value,
-                description: document.getElementById("update-description").value,
-                price: parseFloat(document.getElementById("update-price").value),
-                quantity: parseInt(document.getElementById("update-quantity").value)
+                name: nameInput.value,
+                description: descriptionInput.value,
+                price: parseFloat(priceInput.value),
+                quantity: parseInt(quantityInput.value)
             };
-    
+
             const response = await fetch(`${BASE_URL}/items/${itemId}`, {
                 method: "PUT",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(updatedData)
             });
-    
-            const result = await response.json();
+
+            if (response.ok) {
+                alert("Data updated successfully!");
+
+                // Clear input fields
+                idInput.value = "";
+                nameInput.value = "";
+                descriptionInput.value = "";
+                priceInput.value = "";
+                quantityInput.value = "";
+            } else {
+                alert("Data not found or update failed.");
+            }
         }
-    
+
         async function deleteItem() {
-            const itemId = document.getElementById("delete-id").value;
-    
-            const response = await fetch(`${BASE_URL}/items/${itemId}`, {
-                method: "DELETE"
-            });
-            const result = await response.json();
-        }
-    
-        async function searchItems() {
-            const query = document.getElementById("search-name").value;
-            const response = await fetch(`${BASE_URL}/items/search/?name=${query}`);
-            const items = await response.json();
+            const idInput = document.getElementById("delete-id");
+            const itemId = idInput.value;
+
+            if (!itemId) {
+                alert("Please enter a valid ID!");
+                return;
+            }
+
+            try {
+                const response = await fetch(`${BASE_URL}/items/${itemId}`, {
+                    method: "DELETE"
+                });
+
+                if (response.ok) {
+                    alert("Data deleted successfully!");
+
+                    // Clear input field
+                    idInput.value = "";
+                } else {
+                    alert("Data not found!");
+                }
+            } catch (error) {
+                alert("An error occurred: " + error.message);
+            }
         }
     </script>
 </head>
@@ -81,7 +120,6 @@
     <button onclick="toggleContainer('add-container')">Add Item</button>
     <button onclick="toggleContainer('update-container')">Update Item</button>
     <button onclick="toggleContainer('delete-container')">Delete Item</button>
-    <button onclick="toggleContainer('search-container')">Search Items</button>
 
     <div id="add-container" class="container">
         <h2>Add Item</h2>
@@ -106,12 +144,6 @@
         <h2>Delete Item</h2>
         <input type="text" id="delete-id" placeholder="Item ID">
         <button onclick="deleteItem()">Submit</button>
-    </div>
-
-    <div id="search-container" class="container">
-        <h2>Search Items</h2>
-        <input type="text" id="search-name" placeholder="Search by Name">
-        <button onclick="searchItems()">Submit</button>
     </div>
 
 </body>

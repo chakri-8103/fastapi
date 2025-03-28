@@ -9,6 +9,10 @@
         button { margin: 10px; padding: 10px 15px; font-size: 16px; cursor: pointer; }
         .container { display: none; margin-top: 20px; padding: 10px; border: 1px solid #ddd; border-radius: 5px; }
         input { display: block; margin: 5px auto; padding: 8px; width: 80%; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        th { background-color: #f2f2f2; }
+        tr:nth-child(even) { background-color: #f9f9f9; }
     </style>
     <script>
         const BASE_URL = "http://localhost:8000";
@@ -124,6 +128,50 @@
                 alert("An error occurred: " + error.message);
             }
         }
+
+        async function viewAllStudents() {
+            try {
+                const response = await fetch(`${BASE_URL}/students/`);
+                if (!response.ok) {
+                    throw new Error("Failed to fetch student data");
+                }
+                const students = await response.json();
+                
+                const tableContainer = document.getElementById("view-container");
+                tableContainer.style.display = "block";
+                
+                const tableBody = document.getElementById("student-table-body");
+                tableBody.innerHTML = "";
+                
+                students.forEach(student => {
+                    const row = document.createElement("tr");
+                    
+                    const idCell = document.createElement("td");
+                    idCell.textContent = student._id;
+                    row.appendChild(idCell);
+                    
+                    const nameCell = document.createElement("td");
+                    nameCell.textContent = student.name;
+                    row.appendChild(nameCell);
+                    
+                    const tenthCell = document.createElement("td");
+                    tenthCell.textContent = student.tenth;
+                    row.appendChild(tenthCell);
+                    
+                    const twelfthCell = document.createElement("td");
+                    twelfthCell.textContent = student.twelfth;
+                    row.appendChild(twelfthCell);
+                    
+                    const gradCell = document.createElement("td");
+                    gradCell.textContent = student.graduation;
+                    row.appendChild(gradCell);
+                    
+                    tableBody.appendChild(row);
+                });
+            } catch (error) {
+                alert("Error fetching student data: " + error.message);
+            }
+        }
     </script>
 </head>
 <body>
@@ -133,6 +181,7 @@
     <button onclick="toggleContainer('add-container')">Add</button>
     <button onclick="toggleContainer('update-container')">Update</button>
     <button onclick="toggleContainer('delete-container')">Delete</button>
+    <button onclick="viewAllStudents()">View All</button>
 
     <div id="add-container" class="container">
         <h2>Add Student Data</h2>
@@ -157,6 +206,24 @@
         <h2>Delete Student Data</h2>
         <input type="text" id="delete-id" placeholder="Student ID">
         <button onclick="deleteItem()">Submit</button>
+    </div>
+
+    <div id="view-container" class="container">
+        <h2>All Students</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>10th %</th>
+                    <th>12th %</th>
+                    <th>Graduation %</th>
+                </tr>
+            </thead>
+            <tbody id="student-table-body">
+                <!-- Student data will be inserted here -->
+            </tbody>
+        </table>
     </div>
 
 </body>
